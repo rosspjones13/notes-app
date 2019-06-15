@@ -1,5 +1,5 @@
-import fs from 'fs'
-import chalk from 'chalk'
+const fs = require('fs')
+const chalk = require('chalk')
 
 const getNotes = () => {
   return "Your notes..."
@@ -7,9 +7,9 @@ const getNotes = () => {
 
 const addNote = (title, body) => {
   const notes = loadNotes()
-  const duplicateNotes = notes.filter(note => note.title === title)
+  const duplicateNote = notes.find(note => note.title === title)
   
-  if (duplicateNotes.length === 0) {
+  if (!duplicateNotes) {
     notes.push({
       title,
       body
@@ -33,12 +33,12 @@ const removeNote = title => {
   }
 }
 
-const saveNotes = function (notes) {
+const saveNotes = notes => {
   const dataJSON = JSON.stringify(notes)
   fs.writeFileSync('notes.json', dataJSON)
 }
 
-const loadNotes = function () {
+const loadNotes = () => {
   try {
     const dataBuffer = fs.readFileSync('notes.json')
     return JSON.parse(dataBuffer)
@@ -47,8 +47,34 @@ const loadNotes = function () {
   }
 }
 
+const listNotes = () => {
+  const notes = loadNotes()
+
+  if (notes.length !== 0) {
+    console.log(chalk.blue.inverse('Listing all notes:'))
+    notes.forEach(note => {
+      console.log('\nTitle: ' + note.title + '\nBody: ' + note.body)
+    })
+  } else {
+    console.log(chalk.red.inverse('No notes to list!'))
+  }
+}
+
+const readNote = title => {
+  const notes = loadNotes()
+  const foundNote = notes.find(note => note.title === title)
+
+  if (foundNote) {
+    console.log(chalk.yellow.inverse(foundNote.title) + '\n' + foundNote.body)
+  } else {
+    console.log(chalk.red.inverse('No note with the title ' + title + ' found!'))
+  }
+}
+
 module.exports = {
   getNotes,
   addNote,
-  removeNote
+  removeNote,
+  listNotes,
+  readNote
 }
