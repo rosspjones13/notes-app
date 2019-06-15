@@ -1,6 +1,6 @@
-const chalk = require('chalk')
-const yargs = require('yargs')
-const notes = require('./notes.js')
+import chalk from 'chalk'
+import yargs from 'yargs'
+import notes from './notes.js'
 
 // Customize yargs version
 yargs.version('1.1.0')
@@ -61,5 +61,3 @@ yargs.command({
 })
 
 yargs.parse()
-
-// console.log(yargs.argv)
